@@ -1,15 +1,20 @@
+import Link from "next/link";
+import { useRouter } from "next/router";
 import {
   Card,
   CardContent,
   CardHeader,
   CardMedia,
   Container,
+  IconButton,
   Typography,
 } from "@mui/material";
 import dateFormat from "dateformat";
 import HTTPConstants from "../../constants/http";
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function Recipe({ recipe, specials }) {
+  const router = useRouter();
   const fullDate = dateFormat(new Date(recipe.postDate), "mmmm dS, yyyy");
 
   let specialsArray = [];
@@ -25,7 +30,7 @@ export default function Recipe({ recipe, specials }) {
 
   if (specialsArray.length) {
     specialsDisplay = specialsArray.map((special) => (
-      <Container key={special.uuid} sx={{ marginTop: 1 }}>
+      <Container key={special.uuid} sx={{ marginBottom: 2 }}>
         <Typography variant="body1" color="text.secondary">
           {special.title}
         </Typography>
@@ -39,7 +44,27 @@ export default function Recipe({ recipe, specials }) {
   return (
     <Container maxWidth={"sm"}>
       <Card sx={{ height: "100%" }}>
-        <CardHeader title={recipe.title} subheader={fullDate} />
+        <CardHeader
+          action={
+            <Link
+              href={{
+                pathname: "/addEditRecipe/[id]",
+                query: {
+                  id: recipe.uuid,
+                },
+              }}
+            >
+              <IconButton
+                color="secondary"
+                aria-label="add or edit recipe button"
+              >
+                <EditIcon />
+              </IconButton>
+            </Link>
+          }
+          title={recipe.title}
+          subheader={fullDate}
+        />
         <CardMedia
           component="img"
           height="194"
@@ -93,7 +118,7 @@ export default function Recipe({ recipe, specials }) {
               ingredientString = ingredientString.concat(ingredient.name);
             }
             return (
-              <Container key={ingredient.uuid} style={{ marginBottom: 1 }}>
+              <Container key={ingredient.uuid} style={{ marginBottom: 5 }}>
                 <Typography variant="body2" color="text.secondary">
                   {ingredientString}
                 </Typography>
@@ -109,7 +134,7 @@ export default function Recipe({ recipe, specials }) {
             if (direction.optional)
               directionString = directionString.concat(" ", "(Optional)");
             return (
-              <Container key={index} style={{ marginBottom: 1 }}>
+              <Container key={index} style={{ marginBottom: 5 }}>
                 <Typography variant="body2" color="text.secondary">
                   {directionString}
                 </Typography>
@@ -151,18 +176,3 @@ export async function getServerSideProps(context) {
     },
   };
 }
-
-// specials.forEach((special) => {
-//   if (special.ingredientId === ingredient.uuid) {
-//     specialDis = (
-//       <Container>
-//         <Typography variant="body1" color="text.secondary">
-//           {special.title}
-//         </Typography>
-//         <Typography variant="body2" color="text.secondary">
-//           {special.text}
-//         </Typography>
-//       </Container>
-//     );
-//   }
-// });

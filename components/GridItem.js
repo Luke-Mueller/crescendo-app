@@ -32,7 +32,7 @@ function GridItem({ recipe }) {
           <CardHeader
             avatar={
               <Avatar
-                sx={{ bgcolor: palette.secondary.main }}
+                sx={{ bgcolor: palette.primary.main }}
                 aria-label="recipe"
               >
                 {recipe.title[0]}
@@ -48,7 +48,7 @@ function GridItem({ recipe }) {
             alt="image of food"
           />
           <CardContent>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body1" color="text.secondary">
               {recipe.description}
             </Typography>
           </CardContent>

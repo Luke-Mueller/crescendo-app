@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
-import { Container, Grid, TextField, Typography } from "@mui/material";
+import Link from "next/link";
+import { Container, Fab, Grid, TextField, Typography } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
 import GridItem from "../components/GridItem";
 import Adornment from "../components/Adornment";
@@ -19,14 +21,14 @@ export default function Recipes({ recipes }) {
     event.preventDefault();
     const userInput = inputRef.current.value.trim();
     if (!userInput) {
-      setDisplayedRecipes(recipes)
+      setDisplayedRecipes(recipes);
       return;
     }
     const newRecipesArray = recipes.filter((recipe) =>
       recipe.title.toLowerCase().includes(userInput.toLowerCase())
     );
 
-    setDisplayedRecipes(newRecipesArray)
+    setDisplayedRecipes(newRecipesArray);
 
     inputRef.current.value = null;
   }
@@ -51,26 +53,51 @@ export default function Recipes({ recipes }) {
         <Typography color="text.primary" variant="h4">
           Recipes
         </Typography>
-        <TextField
-          color="secondary"
-          onChange={() => setError({ hasError: false, message: " " })}
-          error={error.hasError}
-          helperText={error.message}
-          InputProps={{
-            endAdornment: <Adornment submitHandler={submitHandler} />,
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            width: "100%",
           }}
-          inputRef={inputRef}
-          label="Search recipes"
-          sx={{
-            width: UIConstants.inputWidth,
-            minWidth: UIConstants.inputMinWidth,
-            marginLeft: "auto",
-          }}
-          variant="standard"
-        />
+        >
+          <Link href={{
+            pathname: "/addEditRecipe/[id]",
+            query: {
+              id: "new"
+            }
+          }}>
+            <Fab
+              sx={{ marginLeft: 2 }}
+              color="secondary"
+              size="small"
+              aria-label="add"
+            >
+              <AddIcon />
+            </Fab>
+          </Link>
+          <TextField
+            color="secondary"
+            onChange={() => setError({ hasError: false, message: " " })}
+            error={error.hasError}
+            helperText={error.message}
+            InputProps={{
+              endAdornment: <Adornment submitHandler={submitHandler} />,
+            }}
+            inputRef={inputRef}
+            label="Search recipes"
+            sx={{
+              width: UIConstants.inputWidth,
+              minWidth: UIConstants.inputMinWidth,
+              marginLeft: "auto",
+            }}
+            variant="standard"
+          />
+        </div>
       </div>
       <br />
-      <Grid container columns={3} columnSpacing={1}>
+      <Grid container columns={3.0} columnSpacing={1}>
         {displayedRecipes.map((recipe) => (
           <GridItem key={recipe.uuid} recipe={recipe} />
         ))}
