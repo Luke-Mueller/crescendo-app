@@ -12,8 +12,29 @@ import HTTPConstants from "../../constants/http";
 export default function Recipe({ recipe, specials }) {
   const fullDate = dateFormat(new Date(recipe.postDate), "mmmm dS, yyyy");
 
-  console.log(recipe);
-  console.log("s", specials);
+  let specialsArray = [];
+  let specialsDisplay;
+
+  specials.forEach((special) => {
+    recipe.ingredients.forEach((ingredient) => {
+      if (ingredient.uuid === special.ingredientId) {
+        specialsArray.push(special);
+      }
+    });
+  });
+
+  if (specialsArray.length) {
+    specialsDisplay = specialsArray.map((special) => (
+      <Container key={special.uuid} sx={{ marginTop: 1 }}>
+        <Typography variant="body1" color="text.secondary">
+          {special.title}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {special.text}
+        </Typography>
+      </Container>
+    ));
+  }
 
   return (
     <Container maxWidth={"sm"}>
@@ -48,7 +69,7 @@ export default function Recipe({ recipe, specials }) {
             Ingredients
           </Typography>
           {recipe.ingredients.map((ingredient) => {
-            let ingredientString = "";
+            let ingredientString = "- ";
             if (ingredient.amount) {
               if (Number.isInteger(ingredient.amount)) {
                 ingredientString = ingredientString.concat(
@@ -72,7 +93,7 @@ export default function Recipe({ recipe, specials }) {
               ingredientString = ingredientString.concat(ingredient.name);
             }
             return (
-              <Container style={{ marginBottom: 1 }}>
+              <Container key={ingredient.uuid} style={{ marginBottom: 1 }}>
                 <Typography variant="body2" color="text.secondary">
                   {ingredientString}
                 </Typography>
@@ -84,22 +105,26 @@ export default function Recipe({ recipe, specials }) {
             Directions
           </Typography>
           {recipe.directions.map((direction, index) => {
-            let directionString = `${index + 1}. ${direction.instructions}`;
+            let directionString = `${index + 1}.  ${direction.instructions}`;
             if (direction.optional)
               directionString = directionString.concat(" ", "(Optional)");
             return (
-              <Container style={{ marginBottom: 1 }}>
+              <Container key={index} style={{ marginBottom: 1 }}>
                 <Typography variant="body2" color="text.secondary">
-                  {}
                   {directionString}
                 </Typography>
               </Container>
             );
           })}
           <br />
-          <Typography variant="subtitle1" color="text.secondary">
-            Specials
-          </Typography>
+          {specialsArray.length && (
+            <>
+              <Typography variant="subtitle1" color="text.secondary">
+                Specials
+              </Typography>
+              {specialsDisplay}
+            </>
+          )}
         </CardContent>
       </Card>
     </Container>
