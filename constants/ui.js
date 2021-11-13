@@ -1,6 +1,7 @@
 export default {
     bodyPadding: "1.5rem",
-    cardMinWidth: '32rem',
+    cardMinWidth: '10rem',
+    cardContainerMinWidth: '500px',
     inputWidth: "30%",
     inputMinWidth: "12rem",
     defaultErrorMessage: "Please enter a valid recipe name.",

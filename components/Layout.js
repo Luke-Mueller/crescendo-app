@@ -24,12 +24,11 @@ export default function Layout({ children }) {
       <Navbar />
       <Container
         sx={{
-          maxWidth: "md",
+          padding: 0,
           flex: 1,
           display: "flex",
           justifyContent: "center",
           alignContent: "center",
-          margin: 2,
         }}
         component="main"
       >
